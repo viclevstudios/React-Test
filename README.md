@@ -47,7 +47,8 @@ Features:
 - [x] Create the backend for Logins and Registrations
 - [x] Expand the database to store users and user-ids for todos
 - [x] Improve the error and loading states
-- [ ] Use JWT to secure euch todo list 
+- [x] Use JWT to secure euch todo list
+- [ ] Implement a Refresh Token
 - [ ] Add a password reset feature
 - [ ] Add a email verification feature
 - [ ] Implement rate limiting 
