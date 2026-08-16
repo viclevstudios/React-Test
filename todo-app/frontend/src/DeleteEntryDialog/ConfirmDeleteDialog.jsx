@@ -3,16 +3,19 @@ import { useState, useEffect } from "react";
 import api from "../api/api.js";
 import { GeneralError } from "../components/Errors.jsx";
 import { GeneralLoading } from "../components/Loading.jsx";
+import { useTranslation } from "react-i18next";
 
 function ConfirmDeleteDialog({todo, setTodoToDelete, fetchDataFunc}) {
   
+  const { t } = useTranslation();
+
   //Todo Eintrag löschen
   const [loadingMessage, setLoadingMessage] = useState(null);
   const [errorMessage, setErrorMessage] = useState({});
 
   const deleteTodo = async () => {
 
-    setLoadingMessage("Todo löschen...");
+    setLoadingMessage(t("delete-entry-page.loading"));
     setErrorMessage(null);
 
     try {
@@ -20,8 +23,8 @@ function ConfirmDeleteDialog({todo, setTodoToDelete, fetchDataFunc}) {
       fetchDataFunc();
       onCloseDeleteDialog();
     } catch (error) {
-      const rawError = error?.response?.data ?? {general: "Ein Fehler ist aufgetreten. Stelle sicher, dass eine Internetverbindung besteht, oder versuche es später erneut."};
-      console.error('Fehler: ', rawError);
+      const rawError = error?.response?.data ?? {general: t("delete-entry-page.error")};
+      console.error('Error: ', rawError);
       setErrorMessage(rawError);
     }
     finally {
@@ -57,9 +60,9 @@ function ConfirmDeleteDialog({todo, setTodoToDelete, fetchDataFunc}) {
   return (
     <div className="overlay-container">
       <div className="delete-dialog-container">
-        <h2>Löschen bestätigen</h2>
+        <h2>{"delete-entry-page.title"}</h2>
         <p className="delete-dialog-text">
-          Willst du den Eintrag "{todo.name}" wirklich löschen?
+          {"delete-entry-page.label1"} "{todo.name}" {"delete-entry-page.label2"}?
         </p>
 
         {!loadingMessage && <GeneralError errorMessage={errorMessage?.general || errorMessage?.error} />}
@@ -67,11 +70,11 @@ function ConfirmDeleteDialog({todo, setTodoToDelete, fetchDataFunc}) {
         
         <div className="dialog-buttons-container">
           <button className="confirm-add-button" onClick={deleteTodo}>
-            Ja
+            {"delete-entry-page.submit-button"}
           </button>
 
           <button className="cancel-add-button" onClick={onCloseDeleteDialog}>
-            Nein
+            {"delete-entry-page.cancel-button"}
           </button>
         </div>
       </div>

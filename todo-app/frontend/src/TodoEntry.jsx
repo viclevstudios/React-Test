@@ -1,5 +1,5 @@
 import "./TodoEntry.css";
-import penIcon from "./assets/pen.png"
+import penIcon from "./assets/pen.png";
 
 function TodoEntry({ todo, onDelete, onEdit }) {
   return (

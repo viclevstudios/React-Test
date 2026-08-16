@@ -1,0 +1,63 @@
+{
+  "login": {
+    "title": "Login",
+    "submit-button": "Login",
+    "register-button": "Create an account",
+    "input": {
+      "username": "Username",
+      "password": "Password"
+    },
+    "loading": "Logging in...",
+    "error": "An error occurred. Make sure you are connected to the internet, or try it again later."
+  },
+  "register": {
+    "title": "Account Creation",
+    "submit-button": "Register",
+    "login-button": "Login",
+    "input": {
+      "username": "Username",
+      "password": "Password"
+    },
+    "loading": "Creating the account...",
+    "error": "An error occurred. Make sure you are connected to the internet, or try it again later."
+  },
+  "todo-page": {
+    "title": "Todo-List",
+    "add-button": "Create Todo",
+    "empty": "No Todos yet...",
+    "loading": "Loading Todos...",
+    "error": "An error occurred. Make sure you are connected to the internet, or try it again later."
+  },
+  "new-entry-page": {
+    "title": "Create new Todo",
+    "submit-button": "Create Todo",
+    "cancel-button": "Cancel",
+    "input": {
+      "name-label": "Which task do you want to do",
+      "name-placeholder": "Todo Name",
+      "deadline-label": "By when should the task be completed?"
+    },
+    "loading": "Creating the Todo...",
+    "error": "An error occurred. Make sure you are connected to the internet, or try it again later."
+  },
+  "edit-entry-page": {
+    "title": "Edit Todo",
+    "submit-button": "Confirm",
+    "cancel-button": "Cancel",
+    "input": {
+      "name-label": "Edit the name of the Todo:",
+      "name-placeholder": "Todo Name",
+      "deadline-label": "Edit the deadline of the Todo:"
+    },
+    "loading": "Saving changes...",
+    "error": "An error occurred. Make sure you are connected to the internet, or try it again later."
+  },
+  "delete-entry-page": {
+    "title": "Confirm Todo deletion",
+    "delete-entry-page.label1": "Do you really want to delete the Todo",
+    "delete-entry-page.label2": "",
+    "submit-button": "Confirm",
+    "cancel-button": "Cancel",
+    "loading": "Deleting Todo..."
+  }
+}

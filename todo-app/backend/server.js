@@ -195,26 +195,40 @@ app.post('/api/register', async (req, res) => {
     await pool.query("INSERT INTO users(username, password_hash) VALUES ($1, $2)", [username, passwordHash])
 
 
-    // JWT generieren
-    const user = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
-    const userId = user.rows[0].id;
-    const secret = process.env.JWT_SECRET;
-    const token = jwt.sign(
+    // JWTs generieren
+    const accessToken = jwt.sign(
       {
-        userId: userId
+        userId: user.rows[0].id
       },
       process.env.JWT_SECRET,
       {
         expiresIn: "15m"
       }
     );
+    const refreshToken = jwt.sign(
+      {
+        userId: user.rows[0].id
+      },
+      process.env.JWT_REFRESH_SECRET,
+      {
+        expiresIn: "30d"
+      }
+    );
 
-    // Als HTTP-only-Cookie speichern
-    res.cookie("token", token, {
+    // Als HTTP-only-Cookies speichern
+    res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 15 * 60 * 1000
+      maxAge: 15 * 60 * 1000,
+      path: "/"
+    });
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      path: "/api/auth/refresh"
     });
 
     // Erfolgsmeldung
@@ -281,14 +295,14 @@ app.post('/api/login', async (req, res) => {
     );
 
     // Als HTTP-only-Cookies speichern
-    res.cookie("accessToken", token, {
+    res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 15 * 60 * 1000,
       path: "/"
     });
-    res.cookie("refreshToken", token, {
+    res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
@@ -321,7 +335,7 @@ app.get('/api/auth/me', authenticateToken, async (req, res) => {
 
 
 // auth/refresh
-app.post('/api/auth/me', async (req, res) => {
+app.post('/api/auth/refresh', async (req, res) => {
 
   // Überprüfen, ob das Refresh Token vorhanden ist
   const token = req.cookies.refreshToken;

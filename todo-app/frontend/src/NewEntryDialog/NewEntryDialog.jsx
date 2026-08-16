@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { InputFieldError, GeneralError } from "../components/Errors.jsx";
 import { GeneralLoading } from "../components/Loading.jsx";
+import { useTranslation } from "react-i18next";
 import api from "../api/api.js";
 import "./NewEntryDialog.css";
 
 function NewEntryDialog({ isOpen, name, deadline, setName, setDeadline, setIsAddDialogOpen, fetchDataFunc }) {
+
+  const { t } = useTranslation();
 
   //Todo Eintrag hinzufügen
   const [loadingMessage, setLoadingMessage] = useState(null);
@@ -12,20 +15,19 @@ function NewEntryDialog({ isOpen, name, deadline, setName, setDeadline, setIsAdd
 
   const addTodo = async () => {
 
-    setLoadingMessage("Todo erstellen...");
+    setLoadingMessage(t("new-entry-page.loading"));
     setErrorMessage({});
 
     try {
-      const response = await api.post({ name: name, deadline: deadline });
-      console.log('Antwort:', response.data);
+      await api.post("/", {name, deadline});
       fetchDataFunc();
       setName("");
       setDeadline("");
 
       setIsAddDialogOpen(false);
     } catch (error) {
-      const rawError = error?.response?.data ?? {general: "Ein Fehler ist aufgetreten. Stelle sicher, dass eine Internetverbindung besteht, oder versuche es später erneut."};;
-      console.error('Fehler: ', rawError);
+      const rawError = error?.response?.data ?? {general: t("new-entry-page.error")};;
+      console.error("Error: " + error)
       setErrorMessage(rawError);
     }
     finally {
@@ -58,24 +60,24 @@ function NewEntryDialog({ isOpen, name, deadline, setName, setDeadline, setIsAdd
   return (
     <div className="overlay-container" >
       <div className="confirm-dialog-container">
-        <h2>Neuen Todo-Eintrag hinzufügen</h2>
+        <h2>{t("new-entry-page.title")}</h2>
 
         <div className="new-entry-input-container">
           <p className="new-entry-input-label">
-            Welche Aufgabe willst du erledigen:
+            {t("new-entry-page.input.name-label")}:
           </p>
           <input
             className="new-entry-input"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Todo Name"
+            placeholder={t("new-entry-page.input.name-placeholder")}
           />
           <InputFieldError errorMessage={errorMessage?.name || " "} />
         </div>
 
         <div className="new-entry-input-container">
           <p className="new-entry-input-label">
-            Bis wann soll die Aufgabe erledigt sein:
+            {t("new-entry-page.input.name-label")}:
           </p>
           <input
             className="new-entry-input"
@@ -91,11 +93,11 @@ function NewEntryDialog({ isOpen, name, deadline, setName, setDeadline, setIsAdd
 
         <div className="new-entry-buttons-container">
           <button className="new-entry-confirm-button" onClick={addTodo}>
-            Hinzufügen
+            {t("new-entry-page.submit-button")}
           </button>
 
           <button className="new-entry-cancel-button" onClick={onClose}>
-            Abbrechen
+            {t("new-entry-page.cancel-button")}
           </button>
         </div>
       </div>

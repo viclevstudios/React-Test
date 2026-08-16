@@ -15,11 +15,11 @@ api.interceptors.response.use(
 
     if (
       error.response?.status !== 401 ||
-      originalRequest._retry
+      originalRequest._retry ||
+      originalRequest.url === "/auth/refresh"
     ) {
       return Promise.reject(error);
     }
-
     originalRequest._retry = true;
 
     try {

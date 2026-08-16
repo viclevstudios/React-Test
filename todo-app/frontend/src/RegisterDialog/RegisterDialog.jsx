@@ -5,8 +5,12 @@ import { InputFieldError, GeneralError } from "../components/Errors.jsx";
 import { GeneralLoading } from "../components/Loading.jsx";
 import "../LoginDialog/LoginDialog.css";
 import { useAuth } from "../context/useAuth.js";
+import { useTranslation } from "react-i18next";
+import TranslationButton from '../components/TranslationButton.jsx';
 
 function RegisterDialog() {
+
+  const { t } = useTranslation();
 
   // States
   const [username, setUsername] = useState("");
@@ -21,14 +25,14 @@ function RegisterDialog() {
   // Registrieren
   const handleSubmit = async () => {
 
-    setLoadingMessage("Account erstellen...");
+    setLoadingMessage(t("register.loading"));
     setErrorMessage(null);
 
     try {
       await register(username, password);
       navigate("/todos");
     } catch (error) {
-      const rawError = error?.response?.data ?? {general: "Ein Fehler ist aufgetreten. Stelle sicher, dass eine Internetverbindung besteht, oder versuche es später erneut."};;
+      const rawError = error?.response?.data ?? {general: t("register.error")};
       console.error('Fehler: ', rawError);
       setErrorMessage(rawError);
     }
@@ -39,14 +43,15 @@ function RegisterDialog() {
 
   return (
     <div className="login-container">
-      <h1>Registrieren</h1>
+      <TranslationButton />
+      <h1>{t("register.title")}</h1>
 
       <div className="login-input-container">
         <input
           className="login-input"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          placeholder="Username"
+          placeholder={t("login.input.username")}
         />
         <InputFieldError errorMessage={errorMessage?.username || " "} />
       </div>
@@ -57,19 +62,19 @@ function RegisterDialog() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           type="password"
-          placeholder="Password"
+          placeholder={t("login.input.password")}
         />
         <InputFieldError errorMessage={errorMessage?.password || " "} />
       </div>
 
       <button className="login-button" onClick={handleSubmit}>
-        Registrieren
+        {t("register.submit-button")}
       </button>
 
       {!loadingMessage && <GeneralError errorMessage={errorMessage?.general} />}
       {loadingMessage && <GeneralLoading loadingMessage={loadingMessage} />}
 
-      <Link to="/login" className="login-nav-link">Anmelden</Link>
+      <Link to="/login" className="login-nav-link">{t("register.login-button")}</Link>
     </div>
   );
 }

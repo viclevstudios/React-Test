@@ -1,0 +1,63 @@
+{
+  "login": {
+    "title": "Anmelden",
+    "submit-button": "Anmelden",
+    "register-button": "Account erstellen",
+    "input": {
+      "username": "Nutzername",
+      "password": "Passwort"
+    },
+    "loading": "Anmelden...",
+    "error": "Ein Fehler ist aufgetreten. Stelle sicher, dass eine Internetverbindung besteht, oder versuche es später erneut."
+  },
+  "register": {
+    "title": "Registrieren",
+    "submit-button": "Registrieren",
+    "login-button": "Anmelden",
+    "input": {
+      "username": "Nutzername",
+      "password": "Passwort"
+    },
+    "loading": "Account erstellen...",
+    "error": "Ein Fehler ist aufgetreten. Stelle sicher, dass eine Internetverbindung besteht, oder versuche es später erneut."
+  },
+  "todo-page": {
+    "title": "Todo-Liste",
+    "add-button": "Todo erstellen",
+    "empty": "Keine Todos erstellt...",
+    "loading": "Laden der Todo-Einträge...",
+    "error": "Ein Fehler ist aufgetreten. Stelle sicher, dass eine Internetverbindung besteht, oder versuche es später erneut."
+  },
+  "new-entry-page": {
+    "title": "Neuen Todo-Eintrag hinzufügen",
+    "submit-button": "Todo erstellen",
+    "cancel-button": "Abbrechen",
+    "input": {
+      "name-label": "Welche Aufgabe willst du erledigen",
+      "name-placeholder": "Todo Name",
+      "deadline-label": "Bis wann soll die Aufgabe erledigt sein"
+    },
+    "loading": "Todo erstellen...",
+    "error": "Ein Fehler ist aufgetreten. Stelle sicher, dass eine Internetverbindung besteht, oder versuche es später erneut."
+  },
+  "edit-entry-page": {
+    "title": "Todo-Eintrag bearbeiten",
+    "submit-button": "Bestätigen",
+    "cancel-button": "Abbrechen",
+    "input": {
+      "name-label": "Namen des Eintrags bearbeiten:",
+      "name-placeholder": "Todo Name",
+      "deadline-label": "Deadline des Eintrags bearbeiten:"
+    },
+    "loading": "Änderungen speichern...",
+    "error": "Ein Fehler ist aufgetreten. Stelle sicher, dass eine Internetverbindung besteht, oder versuche es später erneut."
+  },
+  "delete-entry-page": {
+    "title": "Löschen bestätigen",
+    "delete-entry-page.label1": "Willst du den Eintrag",
+    "delete-entry-page.label2": "wirklich löschen",
+    "submit-button": "Bestätigen",
+    "cancel-button": "Abbrechen",
+    "loading": "Todo löschen..."
+  }
+}

@@ -2,9 +2,12 @@ import "./EditEntryDialog.css";
 import { useState, useEffect } from "react";
 import { InputFieldError, GeneralError } from "../components/Errors.jsx";
 import { GeneralLoading } from "../components/Loading.jsx";
+import { useTranslation } from "react-i18next";
 import api from "../api/api.js";
 
 function NewEntryDialog({ todoToEdit, setTodoToEdit, fetchDataFunc }) {
+
+  const { t } = useTranslation();
 
   // Alte Werte
   const oldName = todoToEdit?.name ?? undefined;
@@ -28,7 +31,7 @@ function NewEntryDialog({ todoToEdit, setTodoToEdit, fetchDataFunc }) {
 
   //Todo bearbeiten bestätigen
   const confirmEditTodo = async () => {
-    setLoadingMessage("Änderungen speichern...");
+    setLoadingMessage(t("edit-entry-page.loading"));
     setErrorMessage(null);
 
     let changes = {};
@@ -41,14 +44,12 @@ function NewEntryDialog({ todoToEdit, setTodoToEdit, fetchDataFunc }) {
 
 
     try {
-      const response = await api.patch(`/${todoToEdit.id}`, changes);
-      console.log('Antwort:', response.data);
+      await api.patch(`/${todoToEdit.id}`, changes);
       fetchDataFunc();
-
       onCloseEditDialog();
     } catch (error) {
-      const rawError = error?.response?.data ?? { general: "Ein Fehler ist aufgetreten. Stelle sicher, dass eine Internetverbindung besteht, oder versuche es später erneut." };;
-      console.error('Fehler: ', rawError);
+      const rawError = error?.response?.data ?? { general: t("edit-entry-page.error") };;
+      console.error('Error: ', rawError);
       setErrorMessage(rawError);
     }
     finally {
@@ -83,24 +84,24 @@ function NewEntryDialog({ todoToEdit, setTodoToEdit, fetchDataFunc }) {
   return (
     <div className="overlay-container" >
       <div className="confirm-dialog-container">
-        <h2>Todo-Eintrag bearbeiten</h2>
+        <h2>{t("edit-entry-page.title")}</h2>
 
         <div className="new-entry-input-container">
           <p className="new-entry-input-label">
-            Namen des Eintrags bearbeiten:
+            {t("edit-entry-page.input.name-label")}
           </p>
           <input
             className="new-entry-input"
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
-            placeholder="Todo Name"
+            placeholder={t("new-entry-page.input.name-placeholder")}
           />
           <InputFieldError errorMessage={errorMessage?.name || " "} />
         </div>
 
         <div className="new-entry-input-container">
           <p className="new-entry-input-label">
-            Deadline des Eintrags bearbeiten:
+            {t("edit-entry-page.input.name-label")}:
           </p>
           <input
             className="new-entry-input"
@@ -116,11 +117,11 @@ function NewEntryDialog({ todoToEdit, setTodoToEdit, fetchDataFunc }) {
 
         <div className="dialog-buttons-container">
           <button className="confirm-add-button" onClick={confirmEditTodo}>
-            Bestätigen
+            {t("edit-entry-page.submit-button")}
           </button>
 
           <button className="cancel-add-button" onClick={onCloseEditDialog}>
-            Abbrechen
+            {t("edit-entry-page.cancel-button")}
           </button>
         </div>
       </div>

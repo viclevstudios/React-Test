@@ -6,9 +6,13 @@ import EditEntryDialog from "./EditEntryDialog/EditEntryDialog.jsx";
 import StatusMessage from './StatusMessage.jsx';
 import { useState, useEffect, useCallback } from "react";
 import api from "./api/api.js";
+import { useTranslation } from "react-i18next";
+import TranslationButton from './components/TranslationButton.jsx';
 
 //App
 function TodoPage() {
+
+  const { t } = useTranslation();
 
   //Todo Einträge als State 
   const [todos, setTodos] = useState([]);
@@ -17,20 +21,20 @@ function TodoPage() {
   const [errorMessage, setErrorMessage] = useState({});
 
   const fetchData = useCallback(async () => {
-    setLoadingMessage("Laden der Todo-Einträge...");
+    setLoadingMessage(t("todo-page.loading"));
     setErrorMessage({});
 
     try {
-      let { data } = await api.get();
+      let { data } = await api.get("/");
       setTodos(data);
     } catch (error) {
-      const rawError = error?.response?.data ?? {general: "Ein Fehler ist aufgetreten. Stelle sicher, dass eine Internetverbindung besteht, oder versuche es später erneut."};
-      console.error('Fehler: ', rawError);
+      const rawError = error?.response?.data ?? {general: t("todo-page.error")};
+      console.error("Error: " + error);
       setErrorMessage(rawError);
     } finally {
       setLoadingMessage(null);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -69,10 +73,11 @@ function TodoPage() {
   //Ausgabe
   return (
     <div className="app-container">
-      <h1 className="title">To-Do-Liste</h1>
+      <TranslationButton />
+      <h1 className="title">{t("todo-page.title")}</h1>
       <div className="todo-entries-container">
         {
-          (todos.length === 0 && !loadingMessage && !errorMessage) ? "No todos yet..." : todos.map(todo => (
+          (todos.length === 0 && !loadingMessage && !errorMessage) ? t("todo-page.empty") : todos.map(todo => (
             <TodoEntry
               key={todo.id}
               todo={todo}
@@ -104,7 +109,7 @@ function TodoPage() {
         fetchDataFunc={fetchData}
       />
       <button className="add-button" onClick={() => setIsAddDialogOpen(true)}>
-        Hinzufügen
+        {t("todo-page.add-button")}
       </button>
     </div>
   );
