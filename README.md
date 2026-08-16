@@ -17,7 +17,7 @@ Features:
 - Show detailed information for saved locations
 
 ### Todo App:
-A project that started as a simple frontend-only todo list app
+A project that started as a simple frontend-only todo list app.
 Currently though, I'm using this project to learn backend development (Express.js, PostgreSQL, JWT-Auth, etc.)
 Features: 
 - Display, create, edit and delete todos
@@ -45,7 +45,8 @@ Features:
 ### Todo App
 - [x] Create a Login and a Register Page
 - [x] Create the backend for Logins and Registrations
-- [x] Expand the database to store users and user-ids for todos 
+- [x] Expand the database to store users and user-ids for todos
+- [x] Improve the error and loading states
 - [ ] Use JWT to secure euch todo list 
 - [ ] Add a password reset feature
 - [ ] Add a email verification feature
