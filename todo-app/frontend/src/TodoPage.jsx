@@ -21,7 +21,9 @@ function TodoPage() {
     setErrorMessage({});
 
     try {
-      let { data } = await axios.get("http://localhost:3000/api");
+      let { data } = await axios.get("http://localhost:3000/api", {
+        withCredentials: true
+    });
       setTodos(data);
     } catch (error) {
       const rawError = error?.response?.data ?? {general: "Ein Fehler ist aufgetreten. Stelle sicher, dass eine Internetverbindung besteht, oder versuche es später erneut."};

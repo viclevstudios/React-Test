@@ -16,7 +16,7 @@ function ConfirmDeleteDialog({todo, setTodoToDelete, fetchDataFunc}) {
     setErrorMessage(null);
 
     try {
-      await axios.delete(`http://localhost:3000/api/${todo.id}`);
+      await axios.delete(`http://localhost:3000/api/${todo.id}`, {withCredentials: true});
       fetchDataFunc();
       onCloseDeleteDialog();
     } catch (error) {

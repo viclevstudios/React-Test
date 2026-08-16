@@ -16,7 +16,7 @@ function NewEntryDialog({ isOpen, name, deadline, setName, setDeadline, setIsAdd
     setErrorMessage({});
 
     try {
-      const response = await axios.post('http://localhost:3000/api', { name: name, deadline: deadline });
+      const response = await axios.post('http://localhost:3000/api', { withCredentials: true, name: name, deadline: deadline });
       console.log('Antwort:', response.data);
       fetchDataFunc();
       setName("");

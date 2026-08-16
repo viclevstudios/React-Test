@@ -5,6 +5,7 @@ import pool from "./db.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import cookieParser from "cookie-parser";
+import authenticateToken from "./authenticateToken.js";
 
 const app = express();
 
@@ -15,9 +16,12 @@ app.use(cookieParser());
 
 
 // GET
-app.get('/api', async (req, res) => {
+app.get('/api', authenticateToken, async (req, res) => {
+
   try {
-    const data = await pool.query("SELECT * FROM todos WHERE user_id = 1 ORDER BY id");
+    const userId = req.user.userId;
+
+    const data = await pool.query("SELECT * FROM todos WHERE user_id = $1 ORDER BY id", [userId]);
     res.json(data.rows);
   } catch (err) {
     console.error(err);
@@ -27,11 +31,12 @@ app.get('/api', async (req, res) => {
 
 
 // POST
-app.post('/api', async (req, res) => {
+app.post('/api', authenticateToken, async (req, res) => {
 
   try {
 
     const entry = req.body;
+    const userId = req.user.userId;
 
     // Prüfen, ob der Body oder alle Felder leer sind
     if (!entry || entry === {} || ((!entry.name || entry.name.trim() === "") && (!entry.deadline || entry.deadline.trim() === ""))) {
@@ -43,7 +48,7 @@ app.post('/api', async (req, res) => {
       return res.status(400).json({ name: "Bitte gib einen Namen für den Todo-Eintrag an" });
     }
     // Überprüfen, ob ein solcher Eintrag bereits existiert
-    const query = await pool.query("SELECT * FROM todos WHERE name = $1 AND user_id = 1", [entry.name]);
+    const query = await pool.query("SELECT * FROM todos WHERE name = $1 AND user_id = $2", [entry.name, userId]);
     if (query.rowCount !== 0) {
       return res.status(409).json({ name: "Es gibt bereits ein Todo-Eintrag mit diesem Namen" });
     }
@@ -54,11 +59,11 @@ app.post('/api', async (req, res) => {
     }
 
     // Neuen Eintrag zur Datenbank hinzufügen
-    await pool.query(`INSERT INTO todos(name, deadline, user_id) VALUES ($1, $2, 1)`, [entry.name, entry.deadline]);
+    await pool.query(`INSERT INTO todos(name, deadline, user_id) VALUES ($1, $2, $3)`, [entry.name, entry.deadline, userId]);
     console.log("Neuer Eintrag hinzugefügt: " + entry.name);
 
     // Erfolgsmeldung
-    const id = await pool.query("SELECT id FROM todos WHERE name = $1 AND user_id = 1", [entry.name]);
+    const id = await pool.query("SELECT id FROM todos WHERE name = $1 AND user_id = $2", [entry.name, userId]);
     res.status(201).json({ id: id, name: entry.name, deadline: entry.deadline });
   } catch (err) {
 
@@ -70,20 +75,21 @@ app.post('/api', async (req, res) => {
 
 
 // DELETE
-app.delete('/api/:id', async (req, res) => {
+app.delete('/api/:id', authenticateToken, async (req, res) => {
 
   try {
 
     const id = parseInt(req.params.id);
+    const userId = req.user.userId;
 
     // Prüfen, ob das Element existiert, das gelöscht werden soll
-    const query = await pool.query("SELECT * FROM todos WHERE id = $1 AND user_id = 1", [id]);
+    const query = await pool.query("SELECT * FROM todos WHERE id = $1 AND user_id = $2", [id, userId]);
     if (!query.rowCount === 0) {
       return res.status(404).json({ error: "Der zu löschende Todo-Eintrag wurde nicht gefunden" });
     }
 
     // Das Element aus der Datenbank löschen
-    await pool.query("DELETE FROM todos WHERE id = $1 AND user_id = 1", [id])
+    await pool.query("DELETE FROM todos WHERE id = $1 AND user_id = $2", [id, userId])
 
     // Erfolgsmeldung
     res.status(201).json(id);
@@ -97,15 +103,16 @@ app.delete('/api/:id', async (req, res) => {
 
 
 // PATCH
-app.patch('/api/:id', async (req, res) => {
-
-  const id = parseInt(req.params.id);
-  const { newName, newDeadline } = req?.body ?? undefined;
+app.patch('/api/:id', authenticateToken, async (req, res) => {
 
   try {
 
+    const id = parseInt(req.params.id);
+    const userId = req.user.userId;
+    const { newName, newDeadline } = req?.body ?? undefined;
+
     // Prüfen, ob das Element existiert, das verändert werden soll
-    const query = await pool.query("SELECT * FROM todos WHERE id = $1 AND user_id = 1", [id]);
+    const query = await pool.query("SELECT * FROM todos WHERE id = $1 AND user_id = $2", [id, userId]);
     if (!query.rowCount === 0) {
       return res.status(404).json({ general: "Der zu bearbeitende Todo-Eintrag wurde nicht gefunden" });
     }
@@ -122,7 +129,7 @@ app.patch('/api/:id', async (req, res) => {
         return res.status(400).json({ name: "Der neue Name ist ungültig" });
       }
 
-      await pool.query("Update todos SET name = $1 WHERE id = $2 AND user_id = 1", [newName, id]);
+      await pool.query("Update todos SET name = $1 WHERE id = $2 AND user_id = $3", [newName, id, userId]);
     }
 
     // Prüfen, ob die angegebene neue Deadline gültig ist
@@ -132,7 +139,7 @@ app.patch('/api/:id', async (req, res) => {
         return res.status(400).json({ deadline: "Die neue Deadline ist ungültig" });
       }
 
-      await pool.query("Update todos SET deadline = $1 WHERE id = $2 AND user_id = 1", [newDeadline, id]);
+      await pool.query("Update todos SET deadline = $1 WHERE id = $2 AND user_id = $3", [newDeadline, id, userId]);
     }
 
     // Erfolgsmeldung

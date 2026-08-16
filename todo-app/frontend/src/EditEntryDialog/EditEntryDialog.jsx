@@ -41,7 +41,7 @@ function NewEntryDialog({ todoToEdit, setTodoToEdit, fetchDataFunc }) {
 
 
     try {
-      const response = await axios.patch(`http://localhost:3000/api/${todoToEdit.id}`, changes);
+      const response = await axios.patch(`http://localhost:3000/api/${todoToEdit.id}`, {withCredentals: true, changes});
       console.log('Antwort:', response.data);
       fetchDataFunc();
 
