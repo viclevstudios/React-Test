@@ -4,6 +4,7 @@ import Todos from "./TodoPage.jsx";
 import Register from "./RegisterDialog/RegisterDialog.jsx";
 import Login from "./LoginDialog/LoginDialog.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import NotFound from "./NotFound.jsx";
 
 //App
 function App() {
@@ -19,7 +20,12 @@ function App() {
         <ProtectedRoute>
           <Todos />
         </ProtectedRoute>
-      }/></Routes>
+      }/>
+
+      <Route path="*" element={<NotFound />}></Route>
+
+    </Routes>
+
   );
 }
 
