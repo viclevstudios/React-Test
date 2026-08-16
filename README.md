@@ -17,6 +17,10 @@ Features:
 - Show detailed information for saved locations
 
 ### Todo App:
+
+<img width="508" height="302" alt="image" src="https://github.com/user-attachments/assets/c5d6bae3-6abd-427d-aceb-398f906f797e" />
+
+
 A project that started as a simple frontend-only todo list app.
 Currently though, I'm using this project to learn backend development (Express.js, PostgreSQL, JWT-Auth, etc.)
 Features: 
@@ -53,4 +57,5 @@ Features:
 - [ ] Add a email verification feature
 - [ ] Implement rate limiting 
 - [ ] Cleanup the frontend architecture
-- [ ] Cleanup the backend architecture 
+- [ ] Cleanup the backend architecture
+- [ ] Add translations
