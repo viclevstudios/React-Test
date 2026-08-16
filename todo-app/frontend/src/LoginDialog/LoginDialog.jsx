@@ -16,14 +16,16 @@ function LoginDialog() {
   const [errorMessage, setErrorMessage] = useState({});
 
   //Login
+  const navigate = useNavigate();
   const login = async () => {
 
     setLoadingMessage("Anmelden...");
     setErrorMessage(null);
 
     try {
-      const token = await axios.post('http://localhost:3000/api/login', {username: username, password: password});
+      await axios.post('http://localhost:3000/api/login', {username: username, password: password}, {withCredentials: true});
       setLoadingMessage(null);
+      navigate("/todos");
     } catch (error) {
       const rawError = error?.response?.data ?? {general: "Ein Fehler ist aufgetreten. Stelle sicher, dass eine Internetverbindung besteht, oder versuche es später erneut."};
       console.error('Fehler: ', rawError);

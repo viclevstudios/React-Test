@@ -14,6 +14,7 @@ function authenticateToken(req, res, next) {
       token,
       process.env.JWT_SECRET
     );
+    console.log("Decoded:", decoded);
 
     req.user = decoded;
 
