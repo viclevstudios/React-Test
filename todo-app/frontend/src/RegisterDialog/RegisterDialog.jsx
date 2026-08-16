@@ -1,11 +1,10 @@
 import { useState } from "react";
-import axios from 'axios';
 import "../LoginDialog/LoginDialog.jsx";
-import { Link } from 'react-router-dom';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { InputFieldError, GeneralError } from "../components/Errors.jsx";
 import { GeneralLoading } from "../components/Loading.jsx";
 import "../LoginDialog/LoginDialog.css";
+import { useAuth } from "../context/useAuth.js";
 
 function RegisterDialog() {
 
@@ -17,17 +16,17 @@ function RegisterDialog() {
   const [errorMessage, setErrorMessage] = useState({});
 
   const navigate = useNavigate();
+  const {register} = useAuth();
 
   // Registrieren
-  const register = async () => {
+  const handleSubmit = async () => {
 
     setLoadingMessage("Account erstellen...");
     setErrorMessage(null);
 
     try {
-      await axios.post('http://localhost:3000/api/register', { username: username, password: password });
-      setLoadingMessage(null);
-      navigate("/login");
+      await register(username, password);
+      navigate("/todos");
     } catch (error) {
       const rawError = error?.response?.data ?? {general: "Ein Fehler ist aufgetreten. Stelle sicher, dass eine Internetverbindung besteht, oder versuche es später erneut."};;
       console.error('Fehler: ', rawError);
@@ -63,7 +62,7 @@ function RegisterDialog() {
         <InputFieldError errorMessage={errorMessage?.password || " "} />
       </div>
 
-      <button className="login-button" onClick={register}>
+      <button className="login-button" onClick={handleSubmit}>
         Registrieren
       </button>
 

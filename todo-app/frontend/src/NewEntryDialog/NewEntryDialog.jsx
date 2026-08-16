@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { InputFieldError, GeneralError } from "../components/Errors.jsx";
 import { GeneralLoading } from "../components/Loading.jsx";
-import axios from 'axios';
+import api from "../api/api.js";
 import "./NewEntryDialog.css";
 
 function NewEntryDialog({ isOpen, name, deadline, setName, setDeadline, setIsAddDialogOpen, fetchDataFunc }) {
@@ -16,7 +16,7 @@ function NewEntryDialog({ isOpen, name, deadline, setName, setDeadline, setIsAdd
     setErrorMessage({});
 
     try {
-      const response = await axios.post('http://localhost:3000/api', { name: name, deadline: deadline }, { withCredentials: true });
+      const response = await api.post({ name: name, deadline: deadline });
       console.log('Antwort:', response.data);
       fetchDataFunc();
       setName("");
@@ -86,7 +86,7 @@ function NewEntryDialog({ isOpen, name, deadline, setName, setDeadline, setIsAdd
           <InputFieldError errorMessage={errorMessage?.deadline || " "} />
         </div>
 
-        {!loadingMessage && <GeneralError errorMessage={errorMessage?.general} />}
+        {!loadingMessage && <GeneralError errorMessage={errorMessage?.general || errorMessage?.error} />}
         {loadingMessage && <GeneralLoading loadingMessage={loadingMessage} />}
 
         <div className="new-entry-buttons-container">

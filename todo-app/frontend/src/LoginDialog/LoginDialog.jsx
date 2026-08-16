@@ -1,10 +1,10 @@
 import { useState } from "react";
-import axios from 'axios';
 import "../LoginDialog/LoginDialog.jsx";
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import { InputFieldError, GeneralError } from "../components/Errors.jsx";
 import { GeneralLoading } from "../components/Loading.jsx";
+import { useAuth } from "../context/useAuth.js";
 
 function LoginDialog() {
 
@@ -17,17 +17,17 @@ function LoginDialog() {
 
   //Login
   const navigate = useNavigate();
-  const login = async () => {
+  const { login } = useAuth();
+  const handleSubmit = async () => {
 
     setLoadingMessage("Anmelden...");
     setErrorMessage(null);
 
     try {
-      await axios.post('http://localhost:3000/api/login', {username: username, password: password}, {withCredentials: true});
-      setLoadingMessage(null);
+      await login(username, password);
       navigate("/todos");
     } catch (error) {
-      const rawError = error?.response?.data ?? {general: "Ein Fehler ist aufgetreten. Stelle sicher, dass eine Internetverbindung besteht, oder versuche es später erneut."};
+      const rawError = error?.response?.data ?? { general: "Ein Fehler ist aufgetreten. Stelle sicher, dass eine Internetverbindung besteht, oder versuche es später erneut." };
       console.error('Fehler: ', rawError);
       setErrorMessage(rawError);
     }
@@ -61,7 +61,7 @@ function LoginDialog() {
         <InputFieldError errorMessage={errorMessage?.password || " "} />
       </div>
 
-      <button className="login-button" onClick={login}>
+      <button className="login-button" onClick={handleSubmit}>
         Anmelden
       </button>
 

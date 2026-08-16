@@ -1,6 +1,6 @@
 import "./ConfirmDeleteDialog.css";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../api/api.js";
 import { GeneralError } from "../components/Errors.jsx";
 import { GeneralLoading } from "../components/Loading.jsx";
 
@@ -16,7 +16,7 @@ function ConfirmDeleteDialog({todo, setTodoToDelete, fetchDataFunc}) {
     setErrorMessage(null);
 
     try {
-      await axios.delete(`http://localhost:3000/api/${todo.id}`, {withCredentials: true});
+      await api.delete(`/${todo.id}`);
       fetchDataFunc();
       onCloseDeleteDialog();
     } catch (error) {
@@ -62,7 +62,7 @@ function ConfirmDeleteDialog({todo, setTodoToDelete, fetchDataFunc}) {
           Willst du den Eintrag "{todo.name}" wirklich löschen?
         </p>
 
-        {!loadingMessage && <GeneralError errorMessage={errorMessage?.general} />}
+        {!loadingMessage && <GeneralError errorMessage={errorMessage?.general || errorMessage?.error} />}
         {loadingMessage && <GeneralLoading loadingMessage={loadingMessage} />}        
         
         <div className="dialog-buttons-container">

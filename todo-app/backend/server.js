@@ -10,8 +10,8 @@ import authenticateToken from "./authenticateToken.js";
 const app = express();
 
 app.use(cors({
-    origin: "http://localhost:5173",
-    credentials: true
+  origin: "http://localhost:5173",
+  credentials: true
 }));
 app.use(express.json());
 app.use(morgan("dev"));
@@ -194,8 +194,33 @@ app.post('/api/register', async (req, res) => {
     // Den Namen zur Datenbank hinzufügen
     await pool.query("INSERT INTO users(username, password_hash) VALUES ($1, $2)", [username, passwordHash])
 
+
+    // JWT generieren
+    const user = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
+    const userId = user.rows[0].id;
+    const secret = process.env.JWT_SECRET;
+    const token = jwt.sign(
+      {
+        userId: userId
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "15m"
+      }
+    );
+
+    // Als HTTP-only-Cookie speichern
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 15 * 60 * 1000
+    });
+
     // Erfolgsmeldung
-    res.status(201).json({ username, passwordHash });
+    res.status(200).json({
+      message: "Login erfolgreich"
+    });
   } catch (err) {
 
     // Fehlermeldung
@@ -265,6 +290,17 @@ app.post('/api/login', async (req, res) => {
     console.error(err);
     return res.status(500).json({ general: "Anmeldung fehlgeschlagen. Versuche es später erneut" });
   }
+});
+
+
+// Auth/me
+app.get('/api/auth/me', authenticateToken, async (req, res) => {
+  const result = await pool.query(
+    "SELECT id, username FROM users WHERE id = $1",
+    [req.user.userId]
+  );
+
+  res.json(result.rows[0]);
 });
 
 app.listen(3000, () => {

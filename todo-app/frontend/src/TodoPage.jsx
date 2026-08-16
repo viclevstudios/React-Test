@@ -5,7 +5,7 @@ import NewEntryDialog from "./NewEntryDialog/NewEntryDialog.jsx";
 import EditEntryDialog from "./EditEntryDialog/EditEntryDialog.jsx";
 import StatusMessage from './StatusMessage.jsx';
 import { useState, useEffect, useCallback } from "react";
-import axios from 'axios';
+import api from "./api/api.js";
 
 //App
 function TodoPage() {
@@ -21,7 +21,7 @@ function TodoPage() {
     setErrorMessage({});
 
     try {
-      let { data } = await axios.get("http://localhost:3000/api", { withCredentials: true });
+      let { data } = await api.get();
       setTodos(data);
     } catch (error) {
       const rawError = error?.response?.data ?? {general: "Ein Fehler ist aufgetreten. Stelle sicher, dass eine Internetverbindung besteht, oder versuche es später erneut."};

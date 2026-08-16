@@ -2,7 +2,7 @@ import "./EditEntryDialog.css";
 import { useState, useEffect } from "react";
 import { InputFieldError, GeneralError } from "../components/Errors.jsx";
 import { GeneralLoading } from "../components/Loading.jsx";
-import axios from "axios";
+import api from "../api/api.js";
 
 function NewEntryDialog({ todoToEdit, setTodoToEdit, fetchDataFunc }) {
 
@@ -41,7 +41,7 @@ function NewEntryDialog({ todoToEdit, setTodoToEdit, fetchDataFunc }) {
 
 
     try {
-      const response = await axios.patch(`http://localhost:3000/api/${todoToEdit.id}`, changes, {withCredentals: true});
+      const response = await api.patch(`/${todoToEdit.id}`, changes);
       console.log('Antwort:', response.data);
       fetchDataFunc();
 
@@ -111,7 +111,7 @@ function NewEntryDialog({ todoToEdit, setTodoToEdit, fetchDataFunc }) {
           <InputFieldError errorMessage={errorMessage?.deadline || " "} />
         </div>
 
-        {!loadingMessage && <GeneralError errorMessage={errorMessage?.general} />}
+        {!loadingMessage && <GeneralError errorMessage={errorMessage?.general || errorMessage?.error} />}
         {loadingMessage && <GeneralLoading loadingMessage={loadingMessage} />}
 
         <div className="dialog-buttons-container">
