@@ -58,4 +58,4 @@ Features:
 - [ ] Implement rate limiting 
 - [ ] Cleanup the frontend architecture
 - [ ] Cleanup the backend architecture
-- [ ] Add translations
+- [x] Add translations
