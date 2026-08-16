@@ -260,9 +260,8 @@ app.post('/api/login', async (req, res) => {
       return res.status(401).json({ general: "Username und Passwort stimmen nicht überein" });
     }
 
-    // JWT generieren
-    const secret = process.env.JWT_SECRET;
-    const token = jwt.sign(
+    // JWTs generieren
+    const accessToken = jwt.sign(
       {
         userId: user.rows[0].id
       },
@@ -271,13 +270,30 @@ app.post('/api/login', async (req, res) => {
         expiresIn: "15m"
       }
     );
+    const refreshToken = jwt.sign(
+      {
+        userId: user.rows[0].id
+      },
+      process.env.JWT_REFRESH_SECRET,
+      {
+        expiresIn: "30d"
+      }
+    );
 
-    // Als HTTP-only-Cookie speichern
-    res.cookie("token", token, {
+    // Als HTTP-only-Cookies speichern
+    res.cookie("accessToken", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 15 * 60 * 1000
+      maxAge: 15 * 60 * 1000,
+      path: "/"
+    });
+    res.cookie("refreshToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      path: "/api/auth/refresh"
     });
 
     // Erfolgsmeldung
@@ -293,7 +309,7 @@ app.post('/api/login', async (req, res) => {
 });
 
 
-// Auth/me
+// auth/me
 app.get('/api/auth/me', authenticateToken, async (req, res) => {
   const result = await pool.query(
     "SELECT id, username FROM users WHERE id = $1",
@@ -301,6 +317,58 @@ app.get('/api/auth/me', authenticateToken, async (req, res) => {
   );
 
   res.json(result.rows[0]);
+});
+
+
+// auth/refresh
+app.post('/api/auth/me', async (req, res) => {
+
+  // Überprüfen, ob das Refresh Token vorhanden ist
+  const token = req.cookies.refreshToken;
+  if (!token) {
+    return res.status(401).json({
+      error: "Refresh Token nicht vorhanden, ungültig oder abgelaufen"
+    });
+  }
+
+  try {
+
+    // Refresh Token prüfen
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_REFRESH_SECRET
+    );
+    console.log("Decoded:", decoded);
+
+    // Neues Access Token erstellen
+    const accessToken = jwt.sign(
+      {
+        userId: user.rows[0].id
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "15m"
+      }
+    );
+
+    // Neues Access Token senden
+    res.cookie("accessToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 15 * 60 * 1000,
+      path: "/"
+    });
+
+    // Erfolgsmeldung
+    res.status(200).json({
+      message: "Access Token Erneuerung erfolgreich"
+    });
+  } catch (error) {
+    return res.status(401).json({
+      error: "Refresh Token ungültig oder abgelaufen"
+    });
+  }
 });
 
 app.listen(3000, () => {

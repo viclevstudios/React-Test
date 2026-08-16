@@ -52,7 +52,7 @@ Features:
 - [x] Expand the database to store users and user-ids for todos
 - [x] Improve the error and loading states
 - [x] Use JWT to secure euch todo list
-- [ ] Implement a Refresh Token
+- [x] Implement a Refresh Token
 - [ ] Add a password reset feature
 - [ ] Add a email verification feature
 - [ ] Implement rate limiting 

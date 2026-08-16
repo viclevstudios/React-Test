@@ -1,16 +1,45 @@
-# React + Vite
+# Todo App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+<img width="508" height="302" alt="image" src="https://github.com/user-attachments/assets/c5d6bae3-6abd-427d-aceb-398f906f797e" />
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## React Compiler
+A project that started as a simple frontend-only todo list app.
+Currently though, I'm using this project to learn backend development (Express.js, PostgreSQL, JWT-Auth, etc.)
+Features: 
+- Display, create, edit and delete todos
+- Save the todos into a Postgres database through an Express.js backend
+- Currently in progress: Authentication and Authorization with JWT
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Technologies 
+### Frontend:
+- HTML & CSS
+- React
+- React Router
 
-## Expanding the ESLint configuration
+### Backend:
+- Node.js with Express.js
+- PostgreSQL
+- currently learning: Authentication and Authorization with JWT-Auth
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Tools:
+- Git & Github
+- Vite
+- Axios
+- REST-APIs
+
+## Planned Features
+### Todo App
+- [x] Create a Login and a Register Page
+- [x] Create the backend for Logins and Registrations
+- [x] Expand the database to store users and user-ids for todos
+- [x] Improve the error and loading states
+- [x] Use JWT to secure euch todo list
+- [ ] Implement a Refresh Token
+- [ ] Add a password reset feature
+- [ ] Add a email verification feature
+- [ ] Implement rate limiting 
+- [ ] Cleanup the frontend architecture
+- [ ] Cleanup the backend architecture
+- [ ] Add translations
