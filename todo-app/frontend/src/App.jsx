@@ -8,6 +8,8 @@ import Login from "./LoginDialog/LoginDialog.jsx";
 function App() {
   return (
     <Routes>
+      <Route path="/" element={<Login />}/>
+
       <Route path="/login" element={<Login />}/>
 
       <Route path="/register" element={<Register />}/>

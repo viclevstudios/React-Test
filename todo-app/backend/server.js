@@ -4,12 +4,14 @@ import morgan from "morgan";
 import pool from "./db.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(cookieParser());
 
 
 // GET
@@ -33,7 +35,7 @@ app.post('/api', async (req, res) => {
 
     // Prüfen, ob der Body oder alle Felder leer sind
     if (!entry || entry === {} || ((!entry.name || entry.name.trim() === "") && (!entry.deadline || entry.deadline.trim() === ""))) {
-      return res.status(400).json({ name: "Bitte gib einen Namen für den Todo-Eintrag an", deadline: "Bitte gib eine Deadline für den Todo-Eintrag an"  });
+      return res.status(400).json({ name: "Bitte gib einen Namen für den Todo-Eintrag an", deadline: "Bitte gib eine Deadline für den Todo-Eintrag an" });
     }
 
     // Prüfen, ob der neue Name gültig ist
@@ -235,8 +237,18 @@ app.post('/api/login', async (req, res) => {
       }
     );
 
+    // Als HTTP-only-Cookie speichern
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 15 * 60 * 1000
+    });
+
     // Erfolgsmeldung
-    res.status(201).json(token);
+    res.status(200).json({
+      message: "Login erfolgreich"
+    });
   } catch (err) {
 
     // Fehlermeldung
