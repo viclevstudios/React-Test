@@ -44,6 +44,7 @@ Features:
 - Vite
 - Axios
 - REST-APIs
+- i18n 
 
 ## Planned Features
 ### Todo App
@@ -53,9 +54,10 @@ Features:
 - [x] Improve the error and loading states
 - [x] Use JWT to secure euch todo list
 - [x] Implement a Refresh Token
-- [ ] Add a password reset feature
-- [ ] Add a email verification feature
+- [ ] Add a logout function
+- [ ] Add a account deletion function
 - [ ] Implement rate limiting 
 - [ ] Cleanup the frontend architecture
 - [ ] Cleanup the backend architecture
 - [x] Add translations
+- [ ] Add a csv export 
